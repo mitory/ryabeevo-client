@@ -1,0 +1,71 @@
+:root {
+	--white-color: #fff;
+	--black-color: #000;
+	--green-color: #008B45;
+	--green-light: #55DB91;
+	--green-dark: #016C36;
+}
+
+* {
+	font-family: "PT Sans Caption", serif;
+	font-size: 13px;
+}
+
+body {
+	font-weight: 400;
+	line-height: 17px;
+	letter-spacing: 0px;
+	color: var(--green-color);
+}
+
+button, a {
+	color: var(--green-color);
+}
+
+button:hover, a:hover {
+	opacity: 0.8;
+}
+
+.container {
+	max-width: 1416px;
+	margin: 0 auto;
+}
+
+@media (max-width: 1416px) {
+	.container {
+		padding: 0 40px;
+	}
+}
+
+/*
+@media (min-width: 480px) {
+	.container {
+		max-width: 480px;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 576px) {
+	.container {
+		max-width: 480px;
+		padding: 0;
+	}
+}
+
+@media (min-width: 768px) {
+	.container {
+		max-width: 576px;
+	}*/
+}
+
+/*@media (max-width: 992px) {
+	.container {
+		max-width: 760px;
+	}
+}*/
+
+@media (max-width: 1416px) {
+	.container {
+		padding: 0 16px;
+	}
+}
