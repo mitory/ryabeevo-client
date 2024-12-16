@@ -7,43 +7,38 @@
                 <div class="elips"></div>
                 <router-link to="/catalog">Проживание</router-link>
                 <div class="elips"></div>
-                <router-link to="/catalog/doma">Дома</router-link>
-                <div class="elips"></div>
-                <div class="this-path">Дом 1</div>
+                <div class="this-path">
+                    {{ route.params.name === 'tankhaus' ? 'Таунхаус' : (route.params.name === 'doma' ? 'Дома' : '') }}
+                </div>
            </div>
         </div>
-        <div class="house">
+        <div class="house" v-if="houseData">
             <div class="main-img image-container">
-                <img src="/house/main.jpg" alt="">
+                <img :src="houseData.image_main.file" :alt="houseData.image_main.name">
             </div>
             <div class="house__content">
                 <div class="house__text-content">
                     <div class="text-content__description">
                         <h2 class="house__subtitle">Описание</h2>
                         <p>
-                            Вместительность — до 6 человек (4 основных места + 2 дополнительных: 1500 руб/чел.)  
+                            {{ houseData.desc_general }}
                         </p>
                     </div>
                     <div class="text-content__comfort">
                         <h2 class="house__subtitle">В числе удобств:</h2>
                         <ul class="comfort-list">
-                            <li class="comgort__item">Бесплатный Wi-fi</li>
-                            <li class="comgort__item">3 телевизора</li>
-                            <li class="comgort__item">Стиральная машина</li>
-                            <li class="comgort__item">Оборудованная кухня со всей необходимой посудой, холодильником, микроволновой печью и электрочайником</li>
-                            <li class="comgort__item">Полотенца, тапочки, мыло, гель для душа и шампунь, фен (по требованию)</li>
-                            <li class="comgort__item">Индивидуальная мангальная зона</li>
-                            <li class="comgort__item">Парковочное место</li>
-                            <li class="comgort__item">Доступ к развлечениям и активностям комплекса</li>
+                            <li class="comgort__item" v-for="el in houseData.conveniences.split('\r\n')" :key="el">
+                                {{ el }}
+                            </li>
                         </ul>
                     </div>
                     <div class="text-content__price">
                         <h2 class="house__subtitle">Стоимость:</h2>
                         <div class="price-text">
-                            В будние дни (пн — чт) — <span class="price-value">6 500 руб/сут.</span>
+                            В будние дни (пн — чт) — <span class="price-value">{{formatNumberWithSpace(houseData.price_weekdays)}} руб/сут.</span>
                         </div>
                         <div class="price-text">
-                            В выходные дни (пт — вск) — <span class="price-value">8 500 руб/сут.</span>
+                            В выходные дни (пт — вск) — <span class="price-value">{{formatNumberWithSpace(houseData.price_weekends)}} руб/сут.</span>
                         </div>
                     </div>
                 </div>
@@ -55,12 +50,12 @@
                 :mouseDrag="false" 
                 :touchDrag="false"
                 ref="myCarousel" >
-                    <slide v-for="elem in slides" :key="elem.id">
+                    <slide v-for="el in houseData.gallery" :key="el.id">
                         <div 
                             class="house-slider__elemnt image-container"
                             v-touch:swipe.left="doSwipeLeft"
                             v-touch:swipe.right="doSwipeRight">
-                                <img :src="elem.urlimg" alt="">
+                                <img :src="el.file" :alt="el.name">
                         </div>
                     </slide>
                     <template #addons>
@@ -75,11 +70,18 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, onMounted, getCurrentInstance, computed } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from "vue-router";
 
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
 const myCarousel = ref(null);
 
-const slides = [];
+function formatNumberWithSpace(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 
 const doSwipeLeft = () => {
     myCarousel.value.next();
@@ -95,10 +97,27 @@ const removeTitleAttributes = appContext.config.globalProperties.removeTitleAttr
 onMounted(() => {
     if (removeTitleAttributes) removeTitleAttributes();
 
-    for (let i = 1; i <= 12; i++) {
-        slides.push({id: i, urlimg: `/house/pic${i}.jpg`});
+    if (!['doma', 'tankhaus'].includes(route.params.name)) {
+        router.push({path: '/404page'});
     }
+
+    if(route.params.name === 'doma') {
+        store.dispatch('appData/initHouse');
+    } 
+
+    if(route.params.name === 'tankhaus') {
+        store.dispatch('appData/initTanhouse');
+    } 
 });
+
+const houseData = computed(() => {
+    if (route.params.name === 'doma') {
+        return store.state.appData.house
+    }
+    if (route.params.name === 'tankhaus') {
+        return store.state.appData.tanhouse
+    }
+})
 
 </script>
 

@@ -1,22 +1,12 @@
 <template>
     <ul class="nav__list">
-        <li class="nav__element" :class="$route.path === '/company' ? 'active' : ''" @click="close">
-            <router-link to="/company">О нас</router-link>
-        </li>
-        <li class="nav__element" :class="$route.path === '/catalog' ? 'active' : ''" @click="close">
-            <router-link to="/catalog">Проживание</router-link>
-        </li>
-        <li class="nav__element" :class="$route.path === '/services/banketnyy-zal' ? 'active' : ''" @click="close">
-            <router-link to="/services/banketnyy-zal">Банкетные залы</router-link>
-        </li>
-        <li class="nav__element" :class="$route.path === '/services' ? 'active' : ''" @click="close">
-            <router-link to="/services">Услуги</router-link>
-        </li>
-        <li class="nav__element" :class="$route.path === '/promo' ? 'active' : ''" @click="close">
-            <router-link to="/promo">Акции</router-link>
-        </li>
-        <li class="nav__element" :class="$route.path === '/contacts' ? 'active' : ''" @click="close">
-            <router-link to="/contacts">Контакты</router-link>
+        <li 
+            v-for="el in $store.state.appData.navList" 
+            :key="el.id" 
+            class="nav__element" 
+            :class="$route.path === el.url ?  'active' : ''"
+            @click="close" >
+            <router-link :to="el.url">{{ el.name }}</router-link>
         </li>
     </ul>
 </template>

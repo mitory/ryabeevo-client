@@ -1,5 +1,5 @@
 <template>
-    <section class="whyus">
+    <section class="whyus" v-if="whysList.length">
         <div class="whyus__content container">
             <h2 class="title">Почему выбирают нас?</h2>
             <div class="whyus__slider slider">
@@ -13,17 +13,17 @@
                     :snap-align="'start'"
                     :breakpoints="breakpoints" 
                     ref="myCarousel">
-                    <slide v-for="elem in slides" :key="elem.id">
+                    <slide v-for="el in whysList" :key="el.id">
                         <div 
                             class="whyus__slide" 
                             v-touch:swipe.left="doSwipeLeft"
                             v-touch:swipe.right="doSwipeRight">
-                            <img :src="elem.urlimg" alt="" class="whyus__img">
+                            <img :src="el.image_main.file" :alt="el.header" class="whyus__img">
                             <h3 class="subtitle whyus__subtitle">
-                                {{ elem.title }}
+                                {{ el.header }}
                             </h3>
                             <p class="whyus__description">
-                                {{ elem.description }}
+                                {{ el.text }}
                             </p>
                         </div>
                     </slide>
@@ -39,7 +39,12 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore();
+store.dispatch('appData/initWhys');
+
 
 const myCarousel = ref(null);
 const windowWidth = ref(window.innerWidth);
@@ -55,12 +60,6 @@ const breakpoints = {
         }
     };
 
-const slides = [        
-                { id: 1, title: 'Всего 7 км от города', description: '15 минут от центра Твери и вы уже на отдыхе', urlimg: '/whyus/map\.svg' },
-                { id: 2, title: 'Сближенность с природой', description: 'Сосновый бор и две речки рядом с базой', urlimg: '/whyus/house\.svg' },
-                { id: 3, title: 'ЧТО-ТО ПРО ГРИЛЬ', description: 'Текст про гриль текст про гриль, про гриль текст', urlimg: '/whyus/grill\.svg' },
-                { id: 4, title: 'ЧТО-ТО ПРО ЛЕС', description: 'Текст про лес текст про лес, про лес текст', urlimg: '/whyus/nature\.svg' },
-    ];
 
 const doSwipeLeft = () => {
     if (windowWidth.value < 760) myCarousel.value.next();
@@ -70,24 +69,18 @@ const doSwipeRight = () => {
     if (windowWidth.value < 760) myCarousel.value.prev();
 };
 
-const onResize = () => {
-    windowWidth.value = window.innerWidth;
-};
-
 const { appContext } = getCurrentInstance();
 const removeTitleAttributes = appContext.config.globalProperties.removeTitleAttributes;
 
 onMounted(() => {
     if (removeTitleAttributes) removeTitleAttributes();
-    window.addEventListener('resize', onResize);
-});
+})
 
-onBeforeUnmount(() => {
-    window.removeEventListener('resize', onResize);
-});
+const whysList = computed(() => store.state.appData.whys );
+const width = computed(() => store.state.system.width );
 
 const shouldHideNavigation = computed(() => {
-    return slides.length <= 4 && windowWidth.value >= 760;
+    return width.value >= 760 && whysList.value.length <= 4;
 });
 </script>
 

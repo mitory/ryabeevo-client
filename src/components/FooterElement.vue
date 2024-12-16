@@ -11,7 +11,7 @@
 
 			<NavList class="footer__nav"/>
 			<div class="footer__contacts">
-                <Tels class="footer__tels" />
+                <Tels class="footer__tels" :tels="$store.state.appData.contacts?.telFo" />
                 <Mails class="footer__mails" />
                 <SocialMedias class="footer__social-media" />
 			</div>

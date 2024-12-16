@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MainPage from './components/MainPage.vue';
-import Catalog from './components/Catalog/Catalog.vue';
+import Catalog from './components/Catalog.vue';
 import About from './components/Pages/About.vue';
 import Service from './components/Pages/Service.vue';
 import PromoList from './components/PagesLists/PromoList.vue';
 import ServicesList from './components/PagesLists/ServicesList.vue';
 import ContactsPage from './components/Contacts/ContactsPage.vue';
-import DomaList from './components/PagesLists/DomaList.vue';
 import HousePageTemplate from './components/Pages/HousePageTemplate.vue';
+import Promo from './components/Pages/Promo.vue';
+import Page404 from './components/Pages/Page404.vue';
 
 export const router = createRouter({
     routes: [
@@ -24,20 +25,20 @@ export const router = createRouter({
             component: Catalog
         },
         {
-            path: '/catalog/doma',
-            component: DomaList
-        },
-        {
-            path: '/catalog/doma/dom-1',
+            path: '/catalog/:name',
             component: HousePageTemplate
         },
         {
-            path: '/services/banketnyy-zal',
+            path: '/services/:name',
             component: Service
         },
         {
             path: '/promo',
             component: PromoList
+        },
+        {
+            path: '/promo/:name',
+            component: Promo
         },
         {
             path: '/services',
@@ -49,7 +50,7 @@ export const router = createRouter({
         },
         {
             path: '/:catchAll(.*)',
-            component: MainPage
+            component: Page404
         }
     ],
     scrollBehavior() {

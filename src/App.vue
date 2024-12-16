@@ -3,14 +3,26 @@ import HeaderElement from './components/HeaderElement.vue';
 import FooterElement from './components/FooterElement.vue';
 import Wrapper from './components/Wrapper.vue';
 import NavMobileMenu from './components/Nav/NavMobileMenu.vue';
-import { getContacts } from './http/api'
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import { useStore } from 'vuex'
 
+const store = useStore();
 
-onMounted(async () => {
-    const response = await getContacts()
-    console.log(response)
+const onResize = () => {
+    store.dispatch('system/setWidth', window.innerWidth);
+};
+onResize();
+
+onMounted(() => {
+    store.dispatch('appData/initNavList');
+    store.dispatch('appData/initContacts');
+    store.dispatch('appData/initSocial');
+    window.addEventListener('resize', onResize);
 })
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', onResize);
+});
 </script>
 
 <template>
@@ -169,6 +181,10 @@ button:hover, a:hover {
         color: #4A4A4A;
     }
 
+    .text ul li {
+        list-style: disc;
+    }
+
     .image-container {
         position: relative;
         width: 100%;
@@ -243,5 +259,20 @@ button:hover, a:hover {
 
     .carousel.house-slider .carousel__next {
         right: -20px !important;
+    }
+
+    .contact__tels-list li {
+        list-style: disc;
+    }
+
+    .contact__email a {
+        color: var(--green-dark) !important;
+        text-decoration: underline;
+    }
+
+    .contact-yamap {
+        border: 2px solid var(--green-light);
+        border-radius: 12px;
+        padding: 2px;
     }
 </style>

@@ -2,6 +2,9 @@
     <nav>
         <NavList />
         <img src="../../assets/img/button_icon/menu-burger.svg" alt="" class="menu-burger-button" @click="openMenu">
+		<p class="mobile__this-path"> 
+			{{ $route.path !== '/' ? $store.state.appData.navList.find(el => el.url === $route.path)?.name : '' }} 
+		</p>
         <SocialMedias class="social-medias" />
     </nav>
 </template>
@@ -31,6 +34,10 @@ const openMenu = () => {
 		display: none;
 	}
 
+	.mobile__this-path {
+		display: none;
+	}
+
 	@media (max-width: 760px) {
 		nav .nav__list {
 			display: none;
@@ -38,8 +45,19 @@ const openMenu = () => {
 		.menu-burger-button {
 			display: block;
 		}
+
+		.mobile__this-path {
+			display: block;
+			font-size: 14px;
+			font-weight: 700;
+			line-height: 18px;
+			letter-spacing: 1px;
+			color: var(--white-color);
+		}
 		nav {
-			justify-content: space-between;
+			justify-content: start;
+			align-items: center;
+			gap: 8px;
 			padding-left: 80px;
 		}
 	}

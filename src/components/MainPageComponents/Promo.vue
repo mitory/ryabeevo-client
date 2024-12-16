@@ -1,9 +1,9 @@
 <template>
-    <section class="promo">
+    <section class="promo" v-if="promoList.length">
 		<div class="promo-content container">
 			<div class="promo__title-container">
 				<h2 class="title">Акции</h2>
-				<a href="" class="promo__alllink">Все акции</a>
+				<router-link to="/promo" class="promo__alllink">Все акции</router-link>
 			</div>
                 <carousel 
                 :items-to-show="3" 
@@ -14,20 +14,22 @@
                 :touchDrag="false"
                 :breakpoints="breakpoints"
                 ref="myCarousel" >
-                <slide v-for="elem in slides" :key="elem.id">
+                <slide v-for="el in promoList" :key="el.id">
                     <div 
                         class="promo__slide" 
                         v-touch:swipe.left="doSwipeLeft"
                         v-touch:swipe.right="doSwipeRight">
-                        <div class="pic__wrapper">
-                            <img :src="elem.urlimg" alt="">
-                        </div>
-                        <h3 class="subtitle">
-                            {{ elem.title }}
-                        </h3>
-                        <p class="promo__desctiption">
-                            {{ elem.desctiption }}
-                        </p>
+                            <router-link :to="`promo/${el.url_name}`">
+                                <div class="pic__wrapper">
+                                    <img :src="el.image_main.file" :alt="el.name">
+                                </div>
+                                <h3 class="subtitle">
+                                    {{ el.name }}
+                                </h3>
+                                <p class="promo__desctiption">
+                                    {{ el.desc_short }}
+                                </p>
+                            </router-link>
                     </div>
                 </slide>
                 <template #addons>
@@ -42,7 +44,10 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore();
 
 const myCarousel = ref(null);
 const windowWidth = ref(window.innerWidth);
@@ -62,12 +67,6 @@ const breakpoints = {
         }
     };
 
-const slides = [
-        {id: 1, title: '1 час в бане в подарок', desctiption: 'При заказе бани от 5 часов в выходные дни (пятница - воскресенье) мы дарим 1 час в подарок!', urlimg: '/promo/pic1.png' },
-        {id: 2, title: 'Подарок для молодоженов', desctiption: 'При проведении свадьбы от 30 человек в нашем банкетном зале мы дарим бесплатное проживание в доме на сутки!', urlimg: '/promo/pic2.png' },
-        {id: 3, title: 'Скидка на проживание', desctiption: 'Мы дарим скидку 25% на проживание в будние дни (воскресенье - четверг)!', urlimg: '/promo/pic3.png' }
-    ];
-
 const doSwipeLeft = () => {
     if (windowWidth.value < 760) myCarousel.value.next();
 };
@@ -76,24 +75,19 @@ const doSwipeRight = () => {
     if (windowWidth.value < 760) myCarousel.value.prev();
 };
 
-const onResize = () => {
-    windowWidth.value = window.innerWidth;
-};
-
 const { appContext } = getCurrentInstance();
 const removeTitleAttributes = appContext.config.globalProperties.removeTitleAttributes;
+store.dispatch('appData/initPromo');
 
 onMounted(() => {
     if (removeTitleAttributes) removeTitleAttributes();
-    window.addEventListener('resize', onResize);
 });
 
-onBeforeUnmount(() => {
-    window.removeEventListener('resize', onResize);
-});
+const promoList = computed(() => store.state.appData.promo);
+const width = computed(() => store.state.system.width );
 
 const shouldHideNavigation = computed(() => {
-    return slides.length <= 3 && windowWidth.value >= 760;
+    return width.value >= 760 && promoList.value.length <= 3;
 });
 </script>
 
@@ -102,6 +96,10 @@ const shouldHideNavigation = computed(() => {
         background: url('../../assets/img/bgs/promo-section.png') center / cover no-repeat;
         width: 100%;
         padding-top: 16.5px;
+    }
+
+    .promo__slide a:hover {
+        opacity: 1;
     }
 
     .promo__title-container {

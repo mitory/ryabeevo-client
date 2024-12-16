@@ -1,5 +1,5 @@
 <template>
-    <section class="gallery">
+    <section class="gallery" v-if="bannersList.length">
         <carousel 
             :items-to-show="1" 
             class="carousel" 
@@ -9,59 +9,50 @@
             :mouseDrag="false" 
             :touchDrag="false"
             ref="myCarousel" >
-            <slide v-for="slide in 5" :key="slide" v-touch:swipe.left="doSwipeLeft"
+            <slide v-for="el in bannersList" :key="el.id" v-touch:swipe.left="doSwipeLeft"
             v-touch:swipe.right="doSwipeRight">
-                <a 
-                href="" 
+                <router-link
+                :to="el.url" 
                 class="gallery__wrapper">
-                    <img src="../../assets/outimg/gallery/pic1.jpg" alt="" class="gallery__pic">
-                </a>
+                    <img :src="el.img" :alt="el.name" class="gallery__pic">
+                    <p class="gallery__title-link"> {{ el.name }} </p>
+                </router-link>
             </slide>
 
             <template #addons>
-                <navigation />
-                <pagination />
+                <navigation v-if="bannersList.length"/>
+                <pagination v-if="bannersList.length"/>
             </template>
         </carousel>
     </section>
 </template>
 
-<script>
+<script setup>
     import 'vue3-carousel/dist/carousel.css'
     import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-    import { ref } from 'vue'
+    import { ref, onMounted, getCurrentInstance, computed} from 'vue'
+    import { getBanner } from '../../http/api'
+    import { useStore } from 'vuex'
 
-    export default {
-        name: 'App',
-        components: {
-            Carousel,
-            Slide,
-            Pagination,
-            Navigation,
-        },
-        setup() {
-            const myCarousel = ref(null);
-            const doSwipeLeft = () => {
-                myCarousel.value.next();
-            };
+    const store = useStore();
+    const { appContext } = getCurrentInstance();
+    const removeTitleAttributes = appContext.config.globalProperties.removeTitleAttributes;
 
-            const doSwipeRight = () => {
-                myCarousel.value.prev();
-            };
+    const myCarousel = ref(null);
+    const doSwipeLeft = () => {
+        myCarousel.value.next();
+    };
 
-            return {
-                myCarousel,
-                doSwipeLeft,
-                doSwipeRight,
-            };
-        },
-        mounted() {
-            this.removeTitleAttributes();
-        },
-        updated() {
-            this.removeTitleAttributes();
-        },
-    }
+    const doSwipeRight = () => {
+        myCarousel.value.prev();
+    };
+
+    onMounted(() => {
+        store.dispatch('appData/initBanners');
+        if (removeTitleAttributes) removeTitleAttributes();
+    });
+
+    const bannersList = computed(() => store.state.appData.banners);
 </script>
 
 <style>
@@ -72,6 +63,23 @@
         width: 100%;
         overflow: hidden;
         text-align: center;
+    }
+
+    .gallery__title-link {
+        position: absolute;
+        bottom: 21px;
+        left: 44px;
+        font-family: "Lobster", sans-serif;
+        font-size: 48px;
+        line-height: 60px;
+        color: var(--white-color);
+        text-shadow: 0 0 20px rgba(85, 219, 145, 0.5);
+    }
+
+    .gallery__title-link::after {
+        content: url('../../assets/img/button_icon/to_link_light-green.svg');
+        margin-left: 13px;
+
     }
 
     .gallery__wrapper:hover {
@@ -114,6 +122,13 @@
         .gallery__wrapper {
             display: flex;
             justify-content: center;
+        }
+
+        .gallery__title-link {
+            bottom: 44px;
+            left: 0;
+            text-align: center;
+            width: 100%;
         }
     }
 </style>

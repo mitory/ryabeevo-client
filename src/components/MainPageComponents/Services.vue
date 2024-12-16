@@ -1,7 +1,11 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
-import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { ref, onMounted, getCurrentInstance, computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore();
+store.dispatch('appData/initServices');
 
 const myCarousel = ref(null);
 const windowWidth = ref(window.innerWidth);
@@ -21,12 +25,6 @@ const breakpoints = {
     }
 };
 
-const slides = [
-    { id: 1, title: 'Банкетный зал', desctiption: 'Отдых на природе всегда в моде.', urlimg: '/services/banket_zal.jpg' },
-    { id: 2, title: 'Выпускные', desctiption: 'Отметьте выпускной вместе с нами', urlimg: '/services/vipusknoi.jpg' },
-    { id: 3, title: 'Лазертаг и пейнтбол', desctiption: 'Отдых для любителей активных игр и адреналина', urlimg: '/services/lazertag.jpg' }
-];
-
 const doSwipeLeft = () => {
     if (windowWidth.value < 760) myCarousel.value.next();
 };
@@ -35,26 +33,24 @@ const doSwipeRight = () => {
     if (windowWidth.value < 760) myCarousel.value.prev();
 };
 
-const onResize = () => {
-    windowWidth.value = window.innerWidth;
-};
-
 const { appContext } = getCurrentInstance();
 const removeTitleAttributes = appContext.config.globalProperties.removeTitleAttributes;
 
 onMounted(() => {
     if (removeTitleAttributes) removeTitleAttributes();
-    window.addEventListener('resize', onResize);
 });
 
-onBeforeUnmount(() => {
-    window.removeEventListener('resize', onResize);
+const servicesList = computed(() => store.state.appData.services)
+const width = computed(() => store.state.system.width );
+
+const shouldHideNavigation = computed(() => {
+    return servicesList.value.length <= 3 && width.value >= 760;
 });
 
 </script>
 
 <template>
-    <section class="services">
+    <section class="services" v-if="servicesList.length">
 		<div class="services__content container">
 			<h2 class="title">К вашим услугам</h2>
             <carousel 
@@ -66,24 +62,26 @@ onBeforeUnmount(() => {
                 :touchDrag="false"
                 :breakpoints="breakpoints"
                 ref="myCarousel" >
-                <slide v-for="elem in slides" :key="elem.id">
+                <slide v-for="el in servicesList" :key="el.id">
                     <div 
                         class="services__slide"
                         v-touch:swipe.left="doSwipeLeft"
                         v-touch:swipe.right="doSwipeRight">
-                        <div class="pic__wrapper">
-                            <img :src="elem.urlimg" alt="">
-                        </div>
-                        <h3 class="subtitle">
-                            {{ elem.title }}
-                        </h3>
-                        <p class="services__description">
-                            {{ elem.desctiption }}
-                        </p>
+                        <router-link :to="`services/${el.url_name}`">
+                            <div class="pic__wrapper">
+                                <img :src="el.image_main.file" :alt="el.name">
+                            </div>
+                            <h3 class="subtitle">
+                                {{ el.name }}
+                            </h3>
+                            <p class="services__description">
+                                {{ el.desc_short }}
+                            </p>
+                        </router-link>
                     </div>
                 </slide>
                 <template #addons>
-                    <navigation />
+                    <navigation :class="{ 'hide': shouldHideNavigation}"/>
                 </template>
             </carousel>
 		</div>
@@ -95,6 +93,10 @@ onBeforeUnmount(() => {
         background: url('../../assets/img/bgs/services-section.png') center / cover no-repeat;
         width: 100%;
         padding: 44.15px 0 54px 0;
+    }
+
+    .services__slide a:hover {
+        opacity: 1;
     }
 
     .services__content .title {

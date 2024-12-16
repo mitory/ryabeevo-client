@@ -1,16 +1,13 @@
 <template>
-    <div>
-        <a href="tel:+79632224545" target="_blank">
-            +7 (963) 222-45-45
-        </a>
-        <a href="tel:+79065495050" target="_blank">
-            +7 (906) 549-50-50
-        </a>
-   </div>
+    <ul>
+        <li v-for="tel in props.tels" :key="tel">
+            <a :href="`tel:${tel.replace(/[\(\)\s-]/g, '')}`">{{ tel }}</a>
+        </li>
+   </ul>
 </template>
 
-<script>
-
+<script setup>
+const props = defineProps(['tels'])
 </script>
 
 <style scoped>

@@ -12,7 +12,7 @@
 				</div>
 				<div class="header__connection">
 					<div class="header__contacts">
-                        <Tels class="header__tels" />
+                        <Tels class="header__tels" :tels="$store.state.appData.contacts?.telHe" />
                         <Adress class="header__address-mobile"/>
                         <Mails class="header__mails" />
 					</div>

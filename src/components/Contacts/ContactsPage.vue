@@ -9,40 +9,30 @@
            </div>
         </div>
         <div class="contacts__content">
-            <div class="contact-blocks">
+            <div class="links_wrapper">
                 <div class="contact-block">
-                    <img src="../../assets/img/contacts_icon/mapmarker.svg" alt="" class="icon">
-                    <div class="contact-wrapper">
-                        <h3 class="subtitle">Адресс</h3>
-                        <Adress />
+                    <div class="contact-element">
+                        <h2 class="contact-title">Адрес:</h2>
+                        <Adress :adress="$store.state.appData.contacts?.contactPageText"/>
+                    </div>
+                    <div class="contact-element">
+                        <h2 class="contact-title">Телефоны:</h2>
+                    <Tels class="flex-column contact__tels-list" :tels="$store.state.appData.contacts?.telPa"/>
+                    </div>
+                    <div class="contact-element">
+                        <h2 class="contact-title">E-mail</h2>
+                        <Mails class="flex-column contact__email"/>
+                    </div>
+                    <div class="contact-element">
+                        <h2 class="contact-title">Режим работы</h2>
+                        <p> {{ $store.state.appData.contacts?.workTime }} </p>
                     </div>
                 </div>
-                <div class="contact-block">
-                    <img src="../../assets/img/contacts_icon/phone.svg" alt="" class="icon">
-                    <div class="contact-wrapper">
-                        <h3 class="subtitle">Телефон</h3>
-                        <Tels class="flex-column"/>
-                    </div>
-                </div>
-                <div class="contact-block">
-                    <img src="../../assets/img/contacts_icon/clock.svg" alt="" class="icon">
-                    <div class="contact-wrapper">
-                        <h3 class="subtitle">Режим работы</h3>
-                        <p>Круглосуточно</p>
-                    </div>
-                </div>
-                <div class="contact-block">
-                    <img src="../../assets/img/contacts_icon/mail.svg" alt="" class="icon">
-                    <div class="contact-wrapper">
-                        <h3 class="subtitle">E-mail</h3>
-                        <Mails />
-                    </div>
-                </div>
+                <SocialMedias class="social-medias" :isContactPage="true"/>
             </div>
-            <SocialMedias class="social-medias"/>
+            <YandexMap class="contact-yamap"/>
         </div>
    </div>
-   <YandexMap />
 </template>
 
 <script setup>
@@ -51,38 +41,41 @@ import Mails from './Mails.vue';
 import Tels from './Tels.vue';
 import SocialMedias from './SocialMedias.vue';
 import YandexMap from '../MainPageComponents/YandexMap.vue';
+
 </script>
 
 <style scoped>
-    .title-block {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 16px;
-    }
-
-    .icon {
-        background: var(--green-dark);
-        border-radius: 100%;
-        padding: 10px;
-        width: 48px;
-        height: 48px;
-    }
-
-    .contact-blocks {
-        width: 600px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1.3fr 1fr;
-        align-items: center;
-        gap: 24px;
+    .container {
+        max-width: 984px;
     }
 
     .contact-block {
         display: flex;
         gap: 16px;
-        align-items: center;
+        flex-direction: column;
+    }
+
+    .contact-block * {
+        color: rgb(74, 74, 74);
+        max-width: 476px;
+    }
+
+    .contact__tels-list {
+        padding-left: 20px;
+    }
+
+    .links_wrapper {
+        display: flex;
+        gap: 37.5px;
+        align-items: start;
+        margin-bottom: 27px;
+    }
+    
+    
+    .contact-title {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1em;
     }
 
     .flex-column {
@@ -91,22 +84,22 @@ import YandexMap from '../MainPageComponents/YandexMap.vue';
     }
 
     .contacts__content {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        padding-bottom: 32px;
-        align-items: center;
+        padding: 32px 0 36px 0;
     }
 
     .social-medias {
-        width: 600px;
         position: relative;
         right: 0;
-        background: var(--green-dark);
         padding: 5px;
-        border-radius: 12px;
-        justify-content: center;
-        gap: 32px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    @media (max-width: 750px) {
+        .links_wrapper {
+            gap: 16px;
+            flex-direction: column;
+        }
     }
 
     @media (max-width: 632px) {

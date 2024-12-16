@@ -6,6 +6,7 @@ import Vue3TouchEvents from "vue3-touch-events";
 import removeTitleMixin from './mixins/removeTitleMixin';
 import { createYmaps } from 'vue-yandex-maps';
 import store from './store/store'
+import { createHead } from '@vueuse/head';
 
 createApp(App)
     .use(store)
@@ -14,5 +15,6 @@ createApp(App)
     .use(createYmaps({
         apikey: 'adc0ab01-5503-4b88-ad9a-b8cdaca67064'
       }))
+    .use(createHead())
     .mixin(removeTitleMixin)
     .mount('#app');

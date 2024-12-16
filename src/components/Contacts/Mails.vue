@@ -1,7 +1,9 @@
 <template>
     <div>
-        <a href="mailto:ryabeevo-polyana@mail.ru" target="_blank">
-            ryabeevo-polyana@mail.ru
+        <a 
+            v-for="item in $store.state.appData.contacts?.mails" 
+            :href="`mailto:${item}`" target="_blank" :key="item"> 
+            {{ item }}
         </a>
    </div>
 </template>
