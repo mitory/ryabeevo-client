@@ -9,6 +9,8 @@ import ContactsPage from './components/Contacts/ContactsPage.vue';
 import HousePageTemplate from './components/Pages/HousePageTemplate.vue';
 import Promo from './components/Pages/Promo.vue';
 import Page404 from './components/Pages/Page404.vue';
+import BanketList from './components/PagesLists/BanketList.vue';
+import Banket from './components/Pages/Banket.vue';
 
 export const router = createRouter({
     routes: [
@@ -43,6 +45,14 @@ export const router = createRouter({
         {
             path: '/services',
             component: ServicesList
+        },
+        {
+            path: '/banketnye-zaly',
+            component: BanketList
+        },
+        {
+            path: '/banketnye-zaly/:name',
+            component: Banket
         },
         {
             path: '/contacts',

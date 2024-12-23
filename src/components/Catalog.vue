@@ -84,9 +84,8 @@ const tanhouseData = computed(() => store.state.appData.tanhouse)
     }
 
     .catalog__card {
-        width: 484px;
         padding: 32px;
-        border: 2px solid var(--green-color);
+        border: 2px solid var(--green-light);
         border-radius: 20px;
         display: flex;
         flex-direction: column;

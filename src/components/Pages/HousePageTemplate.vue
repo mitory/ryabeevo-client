@@ -50,12 +50,16 @@
                 :mouseDrag="false" 
                 :touchDrag="false"
                 ref="myCarousel" >
-                    <slide v-for="el in houseData.gallery" :key="el.id">
+                    <slide v-for="(el, index) in houseData.gallery" :key="el.id">
                         <div 
                             class="house-slider__elemnt image-container"
                             v-touch:swipe.left="doSwipeLeft"
                             v-touch:swipe.right="doSwipeRight">
-                                <img :src="el.file" :alt="el.name">
+                                <img 
+                                :src="el.file" 
+                                :alt="el.name"
+                                class="open-fotogallery"
+                                @click="openFotoGallery(houseData.gallery, index)">
                         </div>
                     </slide>
                     <template #addons>
@@ -78,6 +82,10 @@ const store = useStore();
 const route = useRoute();
 const router = useRouter();
 const myCarousel = ref(null);
+
+const openFotoGallery = (data, index) => {
+    store.dispatch('fotoGallery/open', {data, index});
+}
 
 function formatNumberWithSpace(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -132,7 +140,7 @@ const houseData = computed(() => {
 
     .image-container {
         padding: 32px;
-        border: 2px solid var(--green-color);
+        border: 2px solid var(--green-light);
         border-radius: 20px;
         max-height: 400px;
         display: flex;

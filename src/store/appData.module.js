@@ -1,7 +1,7 @@
 import config from '../http/config'
 import { 
     getContacts, getMenu, getSocial, getBanner, getPromo, 
-    getService, getWhys, getAbout, getHouse, getTanhouse
+    getService, getWhys, getAbout, getHouse, getTanhouse, getBanket
 } from '../http/api'
 
 function makeLink(link) {
@@ -20,7 +20,8 @@ export const appData = {
         services: [],
         about: null,
         house: null,
-        tanhouse: null
+        tanhouse: null,
+        banket: []
     },
     mutations: {
         saveNavList(state, navList) {
@@ -42,14 +43,21 @@ export const appData = {
             state.contacts.workTime = contacts.find(el => el.contact_type === 'WO').text;
         },
         saveSocial(state, social) {
-            const socialGeneral = social.filter(el => el.name.startsWith('Общий'))
+            const socialGeneral = social.filter(el => el.location_type === 'HE')
                                         .map(el => { return {
                                             id: el.id,
                                             img: makeLink(el.image_main.file),
                                             url: el.image_main.url,
                                             name: el.image_main.name
                                         }});
-            const socialContactPage = social.filter(el => el.name.startsWith('Зеленый'))
+            const socialContactPage = social.filter(el => el.location_type === 'PA')
+                                        .map(el => { return {
+                                            id: el.id,
+                                            img: makeLink(el.image_main.file),
+                                            url: el.image_main.url,
+                                            name: el.image_main.name
+                                        }});
+            const socialFooter = social.filter(el => el.location_type === 'FO')
                                         .map(el => { return {
                                             id: el.id,
                                             img: makeLink(el.image_main.file),
@@ -60,6 +68,7 @@ export const appData = {
             state.social = {}
             state.social.general = socialGeneral;
             state.social.contactPage = socialContactPage;
+            state.social.footer = socialFooter;
         },
         saveBanners(state, banners) {
             state.banners = banners.map(el => { return {
@@ -72,6 +81,15 @@ export const appData = {
         savePromo(state, promo) {
             state.promo = [...promo].sort((el1, el2) => el1.weight - el2.weight);
             state.promo.forEach(el => {
+                el.image_main.file = makeLink(el.image_main.file)
+                el.gallery.forEach(pic => {
+                    pic.file = makeLink(pic.file)
+                })
+            });
+        },
+        saveBanket(state, banket) {
+            state.banket = [...banket].sort((el1, el2) => el1.weight - el2.weight);
+            state.banket.forEach(el => {
                 el.image_main.file = makeLink(el.image_main.file)
                 el.gallery.forEach(pic => {
                     pic.file = makeLink(pic.file)
@@ -139,13 +157,19 @@ export const appData = {
         async initBanners({ commit, state }) {
             if(!state.banners.length) {
                 const banners = await getBanner();
-                commit('saveBanners', banners);
+                commit('saveBanners', banners.sort((el1, el2) => el1.weight - el2.weight));
             }
         },
         async initPromo({ commit, state }) {
             if(!state.promo.length) {
                 const promo = await getPromo();
-                commit('savePromo', promo);
+                commit('savePromo', promo.sort((el1, el2) => el1.weight - el2.weight));
+            }
+        },
+        async initBanket({ commit, state }) {
+            if(!state.banket.length) {
+                const banket = await getBanket();
+                commit('saveBanket', banket.sort((el1, el2) => el1.weight - el2.weight));
             }
         },
         async initWhys({ commit, state }) {
@@ -157,7 +181,7 @@ export const appData = {
         async initServices({ commit, state }) {
             if(!state.services.length) {
                 const services = await getService();
-                commit('saveServices', services);
+                commit('saveServices', services.sort((el1, el2) => el1.weight - el2.weight));
             }
         },
         async initAbout({ commit, state }) {

@@ -3,7 +3,9 @@ export const elementController = {
     state: {
         wrapper: false,
         elements: {
-            mobileMenu: false  
+            mobileMenu: false,
+            askForm: false,
+            callBackForm: false,
         }
     },
     mutations: {
@@ -16,6 +18,14 @@ export const elementController = {
         mobileMenuActive(state) {
             state.wrapper = true;
             state.elements.mobileMenu = true;
+        },
+        askFormActive(state) {
+            state.wrapper = true;
+            state.elements.askForm = true;
+        },
+        callBackFormActive(state) {
+            state.wrapper = true;
+            state.elements.callBackForm = true;
         }
     },
     actions: {
@@ -24,6 +34,12 @@ export const elementController = {
         },
         openMobileMenu({ commit }) {
             commit('mobileMenuActive');
+        },
+        openAskForm({ commit }) {
+            commit('askFormActive');
+        },
+        openCallBackForm({ commit }) {
+            commit('callBackFormActive');
         }
     }
 };

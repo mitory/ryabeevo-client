@@ -8,144 +8,68 @@
                 <div class="this-path">{{ props.name }}</div>
            </div>
         </div>
-        <div class="pages-list">
-            <div class="pages-list__element" v-for="el in props.elements" :key="el.id">
-                <div class="pic__wrapper">
-                    <img :src="el.image_main.file" :alt="el.image_main.name">
-                </div>
-                <div class="pages-list__text">
-                    <h3 class="subtitle">{{ el.name }}</h3>
-                    <p class="pages-list__description">
-                        {{ el.desc_short }}
-                    </p>
-                    <div class="link-wrapper">
-                        <router-link :to="`${code}/${el.url_name}`" class="link">Подробнее</router-link>
-                    </div>
-                </div>
-            </div>
+        <div class="pages-list" :class="classGrid">
+            <Card 
+                v-for="el in props.elements" :key="el.id"
+                :title="el.name"
+                :desc="el.desc_short"
+                :link="`/${code}/${el.url_name}`"
+                :image_main="el.image_main"
+                class="card"
+            />
         </div>
    </div>
 </template>
 
 <script setup>
-const props = defineProps(['name', 'elements', 'code'])
+import Card from '../MiniComponents/Card.vue'
+const props = defineProps(['name', 'elements', 'code', 'classGrid'])
 
 </script>
 
 <style scoped>
 
     .container {
-        max-width: 670px;
-        padding: 0 16px;
-    }
-
-    .title-block {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 16px;
+        max-width: 984px;
     }
 
     .pages-list {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        padding-bottom: 32px;
-        align-items: center;
+        padding: 32px 0 36px 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .card {
+        flex-grow: 1;
+        margin-bottom: 32px;
     }
 
     .title-page {
         margin: 8px 0px;
     }
 
-    .pic__wrapper {
-        margin: 0;
-        border: 5px solid var(--white-color);
-        width: 150px;
-        height: 150px;
-    }
+ 
+   
 
-    .pages-list__element {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 32px;
-        background-color: var(--green-dark);
-        padding: 16px 64px;
-        border-radius: 12px;
-    }
-
-    .pages-list__text {
-        width: 350px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .subtitle {
-        margin-bottom: 8px;
-    }
-
-    .pages-list__description {
-        color: var(--white-color);
-    }
-
-    .link-wrapper {
-        display: flex;
-        justify-content: start;
-    }
-
-    .link {
-        color: var(--green-light);
-    }
-
-    .link:hover {
-        color: var(--white-color);
-        opacity: 1;
-    }
-
-    .link:hover::after {
-        content: url('../../assets/img/button_icon/to_link_white.svg');
-    }
-
-    .link::after {
-        content: url('../../assets/img/button_icon/to_link_light.svg');
-        width: 8px;
-        height: 8px;
-        margin-left: 8px;
-    }
-
-    @media (max-width: 670px) {
-        .pages-list__element {
-            flex-direction: column;
-            gap: 16px;
-            padding: 16px 32px;
-        }
-        .pages-list__text {
-            max-width: 350px;
-            text-align: center;
-        }
-        .subtitle {
-            margin-bottom: 0;
-        }
-        .pic__wrapper {
-            width: 117px;
-            height: 117px;
+    @media (max-width: 992px) {
+        .pages-list {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: stretch;
         }
         .link-wrapper {
-            display: flex;
-            justify-content: center;
+            display: inline-flex;
+            width: 100%;
+        }
+        .link-wrapper .catalog__card {
+            width: 100%;
         }
     }
 
-    @media (max-width: 430px) {
-        .pages-list__element {
-            padding: 16px;
-        }
-        .pages-list__text {
-            max-width: 280px;
+
+    @media (max-width: 530px) {
+        .pages-list {
+            grid-template-columns: repeat(1, 1fr);
         }
     }
 </style>

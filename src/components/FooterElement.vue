@@ -13,7 +13,7 @@
 			<div class="footer__contacts">
                 <Tels class="footer__tels" :tels="$store.state.appData.contacts?.telFo" />
                 <Mails class="footer__mails" />
-                <SocialMedias class="footer__social-media" />
+                <SocialMedias class="footer__social-media" :collection="$store.state.appData.social?.footer" />
 			</div>
 		</div>
 	</footer>

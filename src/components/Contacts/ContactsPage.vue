@@ -28,7 +28,7 @@
                         <p> {{ $store.state.appData.contacts?.workTime }} </p>
                     </div>
                 </div>
-                <SocialMedias class="social-medias" :isContactPage="true"/>
+                <SocialMedias class="social-medias" :isContactPage="true" :collection="$store.state.appData.social?.contactPage"/>
             </div>
             <YandexMap class="contact-yamap"/>
         </div>

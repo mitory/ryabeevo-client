@@ -34,10 +34,14 @@ export async function getBanner() {
     return makeRequest('get', `/banner`, null);
 }
 
-export async function getHouse(id) {
+export async function getHouse() {
     return makeRequest('get', `/housing/house`, null);
 }
 
-export async function getTanhouse(id) {
+export async function getTanhouse() {
     return makeRequest('get', `/housing/townhouse`, null);
+}
+
+export async function getBanket() {
+    return makeRequest('get', `/banquethall/`, null);
 }

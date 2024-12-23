@@ -5,7 +5,7 @@
 		<p class="mobile__this-path"> 
 			{{ $route.path !== '/' ? $store.state.appData.navList.find(el => el.url === $route.path)?.name : '' }} 
 		</p>
-        <SocialMedias class="social-medias" />
+        <SocialMedias class="social-medias" :collection="$store.state.appData.social?.general"/>
     </nav>
 </template>
 

@@ -11,7 +11,13 @@
                 <div class="text" v-html="props.text">
                 </div>
                 <div class="gallery">
-                    <img v-for="el in props.gallery" :key="el.id" :src="el.file" :alt="el.name" class="gallery__img">
+                    <img 
+                        v-for="(el, index) in props.gallery" 
+                        :key="el.id" 
+                        :src="el.file" 
+                        :alt="el.name" 
+                        class="gallery__img open-fotogallery"
+                        @click="openFotoGallery(props.gallery, index)">
                 </div>
             </div>
         </div>
@@ -19,6 +25,10 @@
 </template>
 
 <script setup>
+import { useStore } from 'vuex'
+
+const store = useStore();
+
 const props = defineProps({
         name: {
             type: String,
@@ -37,7 +47,9 @@ const props = defineProps({
             default: {}
         }
     })
-
+const openFotoGallery = (data, index) => {
+    store.dispatch('fotoGallery/open', {data, index});
+}
 </script>
 
 <style scoped>

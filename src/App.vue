@@ -3,8 +3,13 @@ import HeaderElement from './components/HeaderElement.vue';
 import FooterElement from './components/FooterElement.vue';
 import Wrapper from './components/Wrapper.vue';
 import NavMobileMenu from './components/Nav/NavMobileMenu.vue';
+import AskForm from './components/AskForm.vue';
 import { onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
+import ModalWindow from './components/ModalWindow.vue';
+import { postAskForm, postCallBackForm } from './http/post_data';
+import FotoGallery from './components/FotoGallery.vue'
+
 
 const store = useStore();
 
@@ -23,6 +28,54 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('resize', onResize);
 });
+
+const handleEmailFormSubmit = async (data) => {
+    try {
+        await postAskForm({
+            name: data.fullname,
+            mail: data.contact,
+            info: data.comment,
+        });
+        showSuccessModal('почтовому адресу');
+        store.dispatch('elementController/close');
+        return true;
+    } catch {
+        showErrorModal();
+        return false;
+    }
+};
+
+const handlePhoneFormSubmit = async (data) => {
+    try {
+        await postCallBackForm({
+            name: data.fullname,
+            phone: data.contact,
+            info: data.comment,
+        });
+        showSuccessModal('телефонному номеру');
+        store.dispatch('elementController/close');
+        return true;
+    } catch {
+        showErrorModal();
+        return false;
+    }
+};
+
+const showSuccessModal = (askMethod) => {
+    store.dispatch('modalController/openModal', {
+        text: `Спасибо за обращение!<br>Мы свяжемся с Вами в ближайшее время по указанному ${askMethod}.`,
+        title: 'Успешно отправлено',
+        isError: false,
+    });
+};
+
+const showErrorModal = () => {
+    store.dispatch('modalController/openModal', {
+        text: `Упс...<br> Кажется что-то пошло не так. Повторите попытку позднее.`,
+        title: 'Отправка не удалась',
+        isError: true,
+    });
+};
 </script>
 
 <template>
@@ -36,6 +89,18 @@ onBeforeUnmount(() => {
   
   <Wrapper :class="{'show': $store.state.elementController.wrapper}" />
   <NavMobileMenu :class="{'show': $store.state.elementController.elements.mobileMenu}" />
+  <AskForm 
+        :class="{'show': $store.state.elementController.elements.askForm}"
+        fieldType="email" 
+        :onSubmit="handleEmailFormSubmit" 
+    />
+    <AskForm 
+        :class="{'show': $store.state.elementController.elements.callBackForm}"
+        fieldType="phone" 
+        :onSubmit="handlePhoneFormSubmit" 
+    />
+  <ModalWindow :class="{'show': $store.state.modalController.isModal}" />
+  <FotoGallery :class="{'show': $store.state.fotoGallery.isOpen}"/>
 </template>
 
 <style>
@@ -261,6 +326,24 @@ button:hover, a:hover {
         right: -20px !important;
     }
 
+    @media (max-width: 500px) {
+        .carousel.fotogallery .carousel__prev, 
+        .carousel.fotogallery .carousel__next {
+            width: 30px !important;
+            height: 30px !important;
+            top: calc(50% - 15px) !important;
+            border-radius: 100%;
+        }
+
+        .carousel.fotogallery .carousel__prev {
+            left: -15px !important;
+        }
+
+        .carousel.fotogallery .carousel__next {
+            right: -15px !important;
+        }
+    }
+
     .contact__tels-list li {
         list-style: disc;
     }
@@ -274,5 +357,12 @@ button:hover, a:hover {
         border: 2px solid var(--green-light);
         border-radius: 12px;
         padding: 2px;
+    }
+
+    .open-fotogallery:hover {
+        cursor: pointer;
+        transition: transform 0.3s ease, filter 0.3s ease;
+        transform: scale(1.01);
+        filter: brightness(0.8);
     }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <a 
-        v-for="el in props.isContactPage ? $store.state.appData.social?.contactPage : $store.state.appData.social?.general"
+        v-for="el in props.collection"
         :key="el.id" 
         :href="el.url"
         :class="props.isContactPage ? 'flex-container' : ''">
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-const props = defineProps(['isContactPage'])
+const props = defineProps(['collection', 'isContactPage'])
 </script>
 
 <style scoped>

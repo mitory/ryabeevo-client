@@ -17,11 +17,11 @@
                         <Mails class="header__mails" />
 					</div>
 					<div class="header__callback-buttons">
-						<button class="callback-button">
+						<button class="callback-button" @click="openCallBackForm">
 							<img src="../assets/img/button_icon/callback.svg" alt="">
 							<p>Заказать звонок</p>
 						</button>
-						<button class="callback-button">
+						<button class="callback-button" @click="openAskForm">
 							<img src="../assets/img/button_icon/write_letter.svg" alt="">
 							<p>Написать нам</p>
 						</button>
@@ -38,8 +38,15 @@ import Adress from './Contacts/Adress.vue';
 import Tels from './Contacts/Tels.vue';
 import Mails from './Contacts/Mails.vue';
 import NavElement from './Nav/NavElement.vue';
+import { useStore } from 'vuex'
 
-
+const store = useStore();
+const openAskForm = () => {
+  store.dispatch('elementController/openAskForm');
+};
+const openCallBackForm = () => {
+  store.dispatch('elementController/openCallBackForm');
+};
 </script>
 
 <style>
