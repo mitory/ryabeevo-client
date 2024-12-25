@@ -12,8 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=PT+Sans+Caption:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="icon" href="favicon.ico">
-    <script type="module" crossorigin src="/assets/index-CpY0kvxZ.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CgbkBgfM.css">
+
+    <script src="https://www.google.com/recaptcha/api.js?
+    onload=onloadCallback
+    &render=explicit
+    &hl={{app.request.locale|default(defaultLang) }}" async defer></script>
+    <script type="module" crossorigin src="/assets/index-TtzNRldv.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-_DOkI90G.css">
   </head>
   <body>
     <div id="app"></div>
