@@ -4,6 +4,7 @@
         v-for="el in props.collection"
         :key="el.id" 
         :href="el.url"
+        target="_blank"
         :class="props.isContactPage ? 'flex-container' : ''">
             <img :src="el.img" :alt="el.name">
             <p v-if="props.isContactPage"> {{ el.name }} </p>

@@ -1,6 +1,8 @@
 <template>
     <footer>
-		<div class="footer__bird-logo"></div>
+		<router-link to="/" class="birdlink">
+			<div class="footer__bird-logo"></div>
+        </router-link>
 		<div class="footer__content">
 			<div class="footer__address">
                 <router-link to="/">

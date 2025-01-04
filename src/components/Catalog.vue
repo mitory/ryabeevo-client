@@ -1,4 +1,7 @@
 <template>
+    <div style="background: rgba(239, 239, 239, 0.41);">
+        <BookingForm class="container long"/>
+    </div>
     <div class = 'catalog container'>
         <div class="title-block">
            <h1 class="title-page">Проживание</h1> 
@@ -9,24 +12,27 @@
            </div>
         </div>
         <div class="catalog__list" v-if="houseData && tanhouseData">
-            <div class="catalog__card">
-                <div class="catalog-title__wrapper">
-                    <h2 class="catalog__title">
-                        Дома
-                    </h2>
+            <router-link to="/catalog/doma" class="link-wrapper">
+                <div class="catalog__card">
+                    <div class="catalog-title__wrapper">
+                        <h2 class="catalog__title">
+                            Дома
+                        </h2>
+                    </div>
+                    <div class="image-container">
+                        <img :src="houseData.image_main.file" :alt="houseData.image_main.name" class="catalog__img">
+                    </div>
+                    <div class="text">
+                        <p>
+                            {{ houseData.desc_type }}
+                        </p>
+                    </div>
+                    <div class="link_container">
+                        <router-link to="/catalog/doma"><div class="next-page"></div></router-link>
+                    </div>
                 </div>
-                <div class="image-container">
-                    <img :src="houseData.image_main.file" :alt="houseData.image_main.name" class="catalog__img">
-                </div>
-                <div class="text">
-                    <p>
-                        {{ houseData.desc_type }}
-                    </p>
-                </div>
-                <div class="link_container">
-                    <router-link to="/catalog/doma"><div class="next-page"></div></router-link>
-                </div>
-            </div>
+            </router-link>
+            <router-link to="/catalog/tankhaus" class="link-wrapper">
             <div class="catalog__card">
                 <div class="catalog-title__wrapper">
                     <h2 class="catalog__title">
@@ -45,6 +51,7 @@
                     <router-link to="/catalog/tankhaus"><div class="next-page"></div></router-link>
                 </div>
             </div>
+            </router-link>
         </div>
    </div>
 </template>
@@ -53,6 +60,7 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { useHead } from '@vueuse/head'
+import BookingForm from './BookingElements/BookingForm.vue';
 
 useHead({
   title: 'Загородный комплекс в 4 км от Твери. Экологически чистое расположение рядом с русским лесом.',
@@ -92,6 +100,17 @@ const tanhouseData = computed(() => store.state.appData.tanhouse)
         gap: 16px;
     }
 
+    .catalog__card:hover {
+        box-shadow: 0 0 20px rgba(85, 219, 145, 0.5);
+        transition: box-shadow 0.3s ease; 
+    }
+
+    .catalog__card:hover .catalog__title {
+        box-shadow: 0 0 20px rgba(85, 219, 145, 0.5);
+        transition: box-shadow 0.3s ease; 
+        border-radius: 12px;
+    }
+
     .catalog-title__wrapper {
         display: flex;
     }
@@ -100,13 +119,14 @@ const tanhouseData = computed(() => store.state.appData.tanhouse)
         box-sizing: content-box;
         font-size: 32px;
         font-weight: 700;
-        line-height: 41px;
+        line-height: 32px;
         letter-spacing: 1px;
         color: var(--green-dark);
-        padding: 4px 8px;
+        padding: 8px 8px 4px 8px;
         background: var(--white-color);
-        margin-top: -56px;
+        margin-top: -48px;
         z-index: 1;
+        vertical-align: middle;
     }
 
     .image-container img {

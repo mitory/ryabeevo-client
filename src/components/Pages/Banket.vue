@@ -4,7 +4,9 @@
         :name="banketData.name"
         :text="banketData.desc_full" 
         :gallery="banketData.gallery"
-        :image_main="banketData.image_main" />
+        :image_main="banketData.image_main"
+        :backlink="'/banketnye-zaly'"
+        :backname="'Банкетные залы'"  />
 </template>
 
 <script setup>

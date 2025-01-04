@@ -11,6 +11,7 @@ import Promo from './components/Pages/Promo.vue';
 import Page404 from './components/Pages/Page404.vue';
 import BanketList from './components/PagesLists/BanketList.vue';
 import Banket from './components/Pages/Banket.vue';
+import TravelLineBooking from './components/BookingElements/TravelLineBooking.vue';
 
 export const router = createRouter({
     routes: [
@@ -57,6 +58,10 @@ export const router = createRouter({
         {
             path: '/contacts',
             component: ContactsPage
+        },
+        {
+            path: '/booking',
+            component: TravelLineBooking
         },
         {
             path: '/:catchAll(.*)',

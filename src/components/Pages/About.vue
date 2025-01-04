@@ -1,6 +1,7 @@
 <template>
     <TemplatePage 
         v-if="aboutData" 
+        :name="'О нас'"
         :text="aboutData.info" 
         :gallery="aboutData.gallery"
         :image_main="aboutData.image_main" />

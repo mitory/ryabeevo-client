@@ -4,7 +4,7 @@
             v-for="el in $store.state.appData.navList" 
             :key="el.id" 
             class="nav__element" 
-            :class="$route.path === el.url ?  'active' : ''"
+            :class="$route.path.startsWith(el.url) ?  'active' : ''"
             @click="close" >
             <router-link :to="el.url">{{ el.name }}</router-link>
         </li>

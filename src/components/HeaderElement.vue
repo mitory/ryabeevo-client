@@ -2,7 +2,9 @@
     <div class="psevdo-header"></div>
 	<div class="mobile-header__wrapper">
 		<header>
-			<div class="bird_logo"></div>
+            <router-link to="/" class="birdlink">
+			    <div class="bird_logo"></div>
+            </router-link>
 			<div class="header__content">
 				<Adress class="header__addres"/>
 				<div class="header__logo-name-wrapper">

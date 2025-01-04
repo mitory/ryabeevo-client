@@ -4,7 +4,9 @@
         :name="serviceData.name"
         :text="serviceData.desc_full" 
         :gallery="serviceData.gallery"
-        :image_main="serviceData.image_main" />
+        :image_main="serviceData.image_main"
+        :backlink="'/services'"
+        :backname="'Услуги'" />
 </template>
 
 <script setup>

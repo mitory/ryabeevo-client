@@ -4,9 +4,20 @@
             <img :src="props.image_main.file" :alt="props.image_main.name">
         </div>
         <div class="container">
-            <h1 class="title-page">
-                {{ props.name }}
-            </h1>
+            <div class="title-block">
+                <h1 class="title-page">
+                    {{ props.name }}
+                    </h1> 
+                <div class="links-path">
+                        <router-link to="/">Главная</router-link>
+                        <div class="elips" v-if="props.backlink && props.backname"></div>
+                        <router-link :to="props.backlink" v-if="props.backlink && props.backname">{{ props.backname }}</router-link>
+                        <div class="elips"></div>
+                        <div class="this-path">
+                            {{ props.name }}
+                        </div>
+                </div>
+            </div>
             <div class="content">
                 <div class="text" v-html="props.text">
                 </div>
@@ -45,7 +56,11 @@ const props = defineProps({
         image_main: {
             type: Object,
             default: {}
-        }
+        },
+        backlink: {
+            type: String
+        },
+        backname: String
     })
 const openFotoGallery = (data, index) => {
     store.dispatch('fotoGallery/open', {data, index});
@@ -65,6 +80,7 @@ const openFotoGallery = (data, index) => {
     .content {
         padding: 16px 0 36px 0;
         display: flex;
+        flex-direction: column;
         gap: 16px;
     }
 
@@ -72,15 +88,20 @@ const openFotoGallery = (data, index) => {
         width: 584px;
     }
 
-    .gallery {
-        width: calc(384px + 2px);
+     .gallery {
+        width: 100%;
         display: flex;
-        gap: 2px;
+        gap: 8px;
         flex-wrap: wrap;
-    }
-
+    } 
     .gallery__img {
-        width: 49%;
+        flex-grow: 1;
+        max-width: 24%;
+        aspect-ratio: 1; 
+        object-fit: cover; 
+        object-position: center; 
+        overflow: hidden;
+        border-radius: 8px;
     }
 
     .container {
@@ -89,19 +110,10 @@ const openFotoGallery = (data, index) => {
     }
 
     @media (max-width: 992px) {
-        .content {
-            flex-direction: column;
-        }
         .container {
             width: auto;
             padding: 0 16px;
-        }
-        .gallery {
-            width: 100%;
-        }
-        .gallery__img {
-            width: 24%;
-        }
+         }
         .text {
             width: auto;
             max-width: 584px;
@@ -110,7 +122,13 @@ const openFotoGallery = (data, index) => {
 
     @media (max-width: 760px) {
         .gallery__img {
-            width: 49%;
+            max-width: 49%;
+        }
+    }
+
+    @media (max-width: 432px) {
+        .gallery__img {
+            max-width: 48%;
         }
     }
 </style>

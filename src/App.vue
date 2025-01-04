@@ -35,6 +35,7 @@ const handleEmailFormSubmit = async (data) => {
             name: data.fullname,
             mail: data.contact,
             info: data.comment,
+            recaptcha: data.recaptcha
         });
         showSuccessModal('почтовому адресу');
         store.dispatch('elementController/close');
@@ -51,6 +52,7 @@ const handlePhoneFormSubmit = async (data) => {
             name: data.fullname,
             phone: data.contact,
             info: data.comment,
+            recaptcha: data.recaptcha
         });
         showSuccessModal('телефонному номеру');
         store.dispatch('elementController/close');
@@ -90,14 +92,18 @@ const showErrorModal = () => {
   <Wrapper :class="{'show': $store.state.elementController.wrapper}" />
   <NavMobileMenu :class="{'show': $store.state.elementController.elements.mobileMenu}" />
   <AskForm 
+        v-if="$store.state.elementController.elements.askForm"
         :class="{'show': $store.state.elementController.elements.askForm}"
         fieldType="email" 
-        :onSubmit="handleEmailFormSubmit" 
+        :onSubmit="handleEmailFormSubmit"
+        :title="'Задать вопрос'" 
     />
     <AskForm 
+        v-if="$store.state.elementController.elements.callBackForm"
         :class="{'show': $store.state.elementController.elements.callBackForm}"
         fieldType="phone" 
         :onSubmit="handlePhoneFormSubmit" 
+        :title="'Заказать звонок'" 
     />
   <ModalWindow :class="{'show': $store.state.modalController.isModal}" />
   <FotoGallery :class="{'show': $store.state.fotoGallery.isOpen}"/>
@@ -364,5 +370,28 @@ button:hover, a:hover {
         transition: transform 0.3s ease, filter 0.3s ease;
         transform: scale(1.01);
         filter: brightness(0.8);
+    }
+
+    .link-wrapper {
+        display: flex;
+        justify-content: start;
+        position: relative;
+    }
+
+    .link-wrapper:hover {
+        opacity: 1;
+    }
+
+    .text ul {
+        margin-left: 16px;
+    }
+
+    .birdlink:hover {
+        opacity: 1;
+    }
+
+    .carousel.house-slider button.carousel__prev:hover,
+    .carousel.house-slider button.carousel__next:hover {
+        opacity: 1 !important;
     }
 </style>

@@ -26,15 +26,6 @@
 </script>
 
 <style scoped>
-    .link-wrapper {
-        display: flex;
-        justify-content: start;
-        position: relative;
-    }
-
-    .link-wrapper:hover {
-        opacity: 1;
-    }
 
     .catalog__card {
         padding: 0 32px 32px 32px;
@@ -46,13 +37,24 @@
         width: 100%;
     }
 
+    .catalog__card:hover {
+        box-shadow: 0 0 20px rgba(85, 219, 145, 0.5);
+        transition: box-shadow 0.3s ease; 
+    }
+
+    .catalog__card:hover .catalog__title {
+        box-shadow: 0 0 20px rgba(85, 219, 145, 0.5);
+        transition: box-shadow 0.3s ease; 
+        border-radius: 12px;
+    }
+
     .catalog-title__wrapper {
         display: flex;
     }
 
     .catalog__title {
         box-sizing: content-box;
-        font-size: 19px;
+        font-size: 17px;
         font-weight: 700;
         line-height: 28px;
         letter-spacing: 1px;
@@ -64,7 +66,7 @@
     }
 
     .image-container img {
-        max-height: 186px;
+        height: 186px;
     }
 
     .catalog__img {

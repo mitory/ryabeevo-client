@@ -24,6 +24,9 @@
                 <pagination v-if="bannersList.length"/>
             </template>
         </carousel>
+        <div class="bookingform-wrapper-in-gallery">
+            <BookingForm class="general"/>
+        </div>
     </section>
 </template>
 
@@ -31,8 +34,8 @@
     import 'vue3-carousel/dist/carousel.css'
     import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
     import { ref, onMounted, getCurrentInstance, computed} from 'vue'
-    import { getBanner } from '../../http/api'
     import { useStore } from 'vuex'
+    import BookingForm from '../BookingElements/BookingForm.vue'
 
     const store = useStore();
     const { appContext } = getCurrentInstance();
@@ -56,6 +59,28 @@
 </script>
 
 <style>
+
+    .gallery {
+        position: relative;
+    }
+
+    .bookingform-wrapper-in-gallery {
+        position: absolute;
+        right: 64px;
+        top: calc(50% - 127px);
+    }
+
+    @media(max-width: 760px) {
+        .bookingform-wrapper-in-gallery {
+            position: static;
+            background: var(--green-dark);
+            width: auto;
+            padding: 16px;
+        }
+    }
+    
+
+
     a.gallery__wrapper {-webkit-tap-highlight-color: transparent;}
     .gallery__wrapper {
         display: block;

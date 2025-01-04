@@ -4,7 +4,9 @@
         :name="promoData.name"
         :text="promoData.desc_full" 
         :gallery="promoData.gallery"
-        :image_main="promoData.image_main" />
+        :image_main="promoData.image_main"
+        :backlink="'/promo'"
+        :backname="'Акции'" />
 </template>
 
 <script setup>

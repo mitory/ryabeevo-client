@@ -1,20 +1,28 @@
 <template>
+    <div style="background: rgba(239, 239, 239, 0.41);">
+        <BookingForm class="container long"/>
+    </div>
     <div class = 'container'>
         <div class="title-block">
-           <h1 class="title-page">Дома</h1> 
+           <h1 class="title-page">
+                {{ route.params.name === 'tankhaus' ? 'Таунхаусы' : (route.params.name === 'doma' ? 'Дома' : '') }}
+            </h1> 
            <div class="links-path">
                 <router-link to="/">Главная</router-link>
                 <div class="elips"></div>
                 <router-link to="/catalog">Проживание</router-link>
                 <div class="elips"></div>
                 <div class="this-path">
-                    {{ route.params.name === 'tankhaus' ? 'Таунхаус' : (route.params.name === 'doma' ? 'Дома' : '') }}
+                    {{ route.params.name === 'tankhaus' ? 'Таунхаусы' : (route.params.name === 'doma' ? 'Дома' : '') }}
                 </div>
            </div>
         </div>
         <div class="house" v-if="houseData">
-            <div class="main-img image-container">
-                <img :src="houseData.image_main.file" :alt="houseData.image_main.name">
+            <div class="house-main-img__wrapper">
+                <div class="main-img image-container image-slide">
+                    <img :src="houseData.image_main.file" :alt="houseData.image_main.name">
+                </div>
+                <LinkToBooking class="bookinglink-wrapper"/>
             </div>
             <div class="house__content">
                 <div class="house__text-content">
@@ -44,7 +52,7 @@
                 </div>
                 <carousel 
                 :items-to-show="1" 
-                class="house-slider" 
+                class="house-slider image-slide" 
                 :transition="600" 
                 :wrapAround="true" 
                 :mouseDrag="false" 
@@ -77,6 +85,8 @@ import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { ref, onMounted, getCurrentInstance, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from "vue-router";
+import LinkToBooking from '../BookingElements/LinkToBooking.vue';
+import BookingForm from '../BookingElements/BookingForm.vue';
 
 const store = useStore();
 const route = useRoute();
@@ -130,6 +140,17 @@ const houseData = computed(() => {
 </script>
 
 <style scoped>
+
+    .bookinglink-wrapper {
+        position: absolute;
+        bottom: -20px;
+        left: calc(50% - 82px);
+    }
+
+    .house-main-img__wrapper {
+        position: relative;
+    }
+
     .house {
         padding: 32px 0 36px 0;
     }
@@ -138,10 +159,14 @@ const houseData = computed(() => {
         max-width: 984px;
     }
 
-    .image-container {
+    .image-slide {
         padding: 32px;
         border: 2px solid var(--green-light);
         border-radius: 20px;
+    }
+
+    .image-container {
+       
         max-height: 400px;
         display: flex;
         margin: 0 0 32px 0px;

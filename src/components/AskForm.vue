@@ -1,62 +1,81 @@
 <template>
     <div class="askform">
         <CloseButton />
-        <form @submit.prevent="submitForm" class="form">
-            <input
-                type="text"
-                class="form__input"
-                placeholder="ФИО"
-                :class="{'invalid': errors.fullname}"
-                v-model="formData.fullname"
-                @input="validateFullname"
-            />
-            <span v-if="errors.fullname" class="error-message">{{ errors.fullname }}</span>
+        <div class="askform__wrapper">
+            <h2 class="askform__title"> {{ props.title }}</h2>
+            <form @submit.prevent="submitForm" class="form">
+                <input
+                    type="text"
+                    class="form__input"
+                    placeholder="ФИО"
+                    :class="{'invalid': errors.fullname}"
+                    v-model="formData.fullname"
+                    @input="validateFullname"
+                />
+                <span v-if="errors.fullname" class="error-message">{{ errors.fullname }}</span>
 
-            <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+                <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
 
-            <input
-                v-if="fieldType === 'email'"
-                type="email"
-                class="form__input"
-                placeholder="Почта"
-                :class="{'invalid': errors.contact}"
-                v-model="formData.contact"
-            />
-            <input
-                 v-if="fieldType === 'phone'"
-                type="text"
-                class="form__input"
-                placeholder="Телефон"
-                :class="{'invalid': errors.contact}"
-                v-model="formData.contact"
-                @input="validatePhone"
-                maxlength="12"
-            />
-            <span v-if="errors.contact" class="error-message">{{ errors.contact }}</span>
+                <input
+                    v-if="fieldType === 'email'"
+                    type="email"
+                    class="form__input"
+                    placeholder="Почта"
+                    :class="{'invalid': errors.contact}"
+                    v-model="formData.contact"
+                />
+                <input
+                    v-if="fieldType === 'phone'"
+                    type="text"
+                    class="form__input"
+                    placeholder="Телефон"
+                    :class="{'invalid': errors.contact}"
+                    v-model="formData.contact"
+                    @input="validatePhone"
+                    maxlength="12"
+                />
+                <span v-if="errors.contact" class="error-message">{{ errors.contact }}</span>
 
-            <textarea
-                class="form__input"
-                placeholder="Ваш комментарий"
-                rows="10"
-                :class="{'invalid': errors.comment}"
-                v-model="formData.comment"
-            ></textarea>
+                <textarea
+                    class="form__input"
+                    placeholder="Ваш комментарий"
+                    rows="10"
+                    :class="{'invalid': errors.comment}"
+                    v-model="formData.comment"
+                ></textarea>
 
-            <button 
-                class="form__button" 
-                :class="{'preload': preload}"
-                :disabled="preload"
-                >{{ !preload ? 'Отправить': 'Отправляем...'}}
-            </button>
-        </form>
+                <RecaptchaGoodle 
+                    class="recaptcha"
+                    :class="{'invalid': errors.recaptcha}"
+                    @verified="onRecaptchaVerified" 
+                    ref="recaptchaRef" recaptchaId="recaptcha-container"
+                />
+
+                <button 
+                    class="form__button" 
+                    :class="{'preload': preload}"
+                    :disabled="preload"
+                    >{{ !preload ? 'Отправить': 'Отправляем...'}}
+                </button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script setup>
 import CloseButton from './MiniComponents/CloseButton.vue';
 import { ref } from 'vue';
+import RecaptchaGoodle from './MiniComponents/Recaptcha.vue';
 
 const preload = ref(false)
+const recaptchaRef = ref(null);
+
+function refreshCaptcha() {
+    if (recaptchaRef.value) {
+        recaptchaRef.value.resetRecaptcha(); 
+    }
+}
+
 
 const props = defineProps({
     fieldType: {
@@ -67,19 +86,26 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    title: String
 });
 
 const formData = ref({
     fullname: '',
     contact: '',
     comment: '',
+    recaptcha: null
 });
 
 const errors = ref({
     fullname: '',
     contact: '',
     comment: '',
+    recaptcha: ''
 });
+
+function onRecaptchaVerified (verifiedToken) {
+  formData.value.recaptcha = verifiedToken;
+};
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePhone = () => {
@@ -104,7 +130,8 @@ const submitForm  = async () => {
     errors.value = {
         fullname: '',
         email: '',
-        comment: ''
+        comment: '',
+        recaptcha: ''
     };
 
     formData.value.fullname = formData.value.fullname.trim();
@@ -133,7 +160,15 @@ const submitForm  = async () => {
         errors.value.comment = true;
     }
 
+    if (!formData.value.recaptcha) {
+        errors.value.recaptcha = true;
+    }
+
     if (Object.values(errors.value).some((error) => error)) {
+        if (formData.value.recaptcha) {
+            formData.value.recaptcha = null;
+            refreshCaptcha();
+        }
         return;
     }
 
@@ -146,12 +181,25 @@ const submitForm  = async () => {
         formData.value.contact = ''
         formData.value.comment = ''
     }
+    formData.value.recaptcha = null;
+    refreshCaptcha();
 
 };
-
 </script>
 
 <style scoped>
+
+.recaptcha.invalid {
+    border: 2px solid rgba(183, 32, 32, 0.793);
+}
+
+.askform__title {
+    color: var(--white-color);
+    text-align: center;
+    font-size: 20px;
+    margin-top: 16px;
+    font-weight: 700;
+}
 
 button.preload:after {
 	content: '';
@@ -206,7 +254,7 @@ button[disabled]:hover {
         gap: 8px;
         width: 100%;
         padding: 0 16px;
-        margin: 48px 0 32px 0;
+        margin: 16px 0 32px 0;
     }
 
     .form__input {
@@ -236,9 +284,9 @@ button[disabled]:hover {
 /* ----------------------- */
     .askform {
         position: fixed;
-        top: calc(50% - 250px);
-        left: calc(50% - 150px);
-        width: 300px;
+        top: 2%;
+        left: calc(50% - 160px);
+        width: 320px;
         background: var(--green-color);
         z-index: 15;
         display: none;
